@@ -5,3 +5,4 @@ lib/Cartovanta.pm
 lib/Cartovanta.pod
 lib/Cartovanta/Unix.pm
 lib/Cartovanta/Unix.pod
+t/00-load.t
