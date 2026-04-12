@@ -20,11 +20,17 @@ our @EXPORT_OK = qw(
   cr_resloc
   cr_home_refresh
   cr_settings
+  cr_alloc_init
+  cr_alloc_get
+  cr_alloc_ready
+  cr_pk_eval
 );
 
 # DECLARE THE HELPER VARIABLES:
 my $_homedir;  # Home directory for the current user
 my $_refresh_home = 1; # Is the home auto-refreshed when applicable?
+my $_alloc_nspace = undef; # Namespace for ad-hoc package names
+my $_alloc_numid = 0; # ID-number of last allocated ad-hoc package name
 
 
 
@@ -263,6 +269,80 @@ sub cr_settings {
       $_refresh_home = 0;
     }
   }
+}
+
+# Initialize the Ad-Hoc Package Namespace Allocator
+sub cr_alloc_init {
+  my $lc_nspace; # Temporary storage for considered namespace
+  
+  # Only valid initializations are allowed 
+  $lc_nspace = $_[0];
+  if ( !defined($lc_nspace) ) { return 0; }
+  if ( ref($lc_nspace) ) { return 0; }
+  if ( !($lc_nspace =~ /^[a-zA-Z_]\w*(?:::[a-zA-Z_]\w*)*$/) )
+  {
+    return 0;
+  }
+  
+  # First initialization wins. However, additional
+  # attempts (as long as they pass the tests that come
+  # up to this point) still are identified as "success".
+  if ( defined($_alloc_nspace) ) { return 1; }
+  
+  # Looks like we have a winner.
+  $_alloc_nspace = $lc_nspace;
+  return 1;
+}
+
+# This function allocates one ad-hoc package name.
+sub cr_alloc_get {
+  # This will only work if the allocator has been
+  # initiated.
+  if ( !defined($_alloc_nspace) ) { return undef; }
+  
+  # Let us assemble the new allocee.
+  $_alloc_numid = int($_alloc_numid + 1.2);
+  return($_alloc_nspace . '::X' . $_alloc_numid . 'z');
+}
+
+# Queries to see if the allocator has been initiated.
+# Returns `1` for yes and `0` for no.
+sub cr_alloc_ready {
+  return ( defined($_alloc_nspace) ? 1 : 0 );
+}
+
+# Does an `eval` on code after slapping on an ad-hoc
+# package name. Returns hashref with the following fields:
+# 'package' -- The ad-hoc package name (`undef` if the
+#     allocator hasn't been initiated, which causes this
+#     function without even calling `eval`)
+# 'evret' -- Return value of `eval`
+# 'err' -- The error message (empty-string upon success)
+sub cr_pk_eval {
+  my $lc_ret; # The in-progress return value
+  my $lc_code; # The code that will get `eval`ed
+  
+  # Construct initial value
+  $lc_ret = {
+    'package' => undef,
+    'evret' => undef,
+    'err' => "Namespace allocator uninitiated.\n",
+  };
+  
+  # And that's what we return if the allocator hasn't
+  # been initiated.
+  if ( !cr_alloc_read() ) { return $lc_ret; }
+  
+  # Now we allocate a namespace and prep code
+  $lc_ret->{'package'} = cr_alloc_get();
+  $lc_code = 'package ' . $lc_ret->{'package'} . '; ' . $_[0];
+  
+  # And finally, the evaluation.
+  $lc_ret->{'evret'} = eval($lc_code);
+  $lc_ret->{'err'} = $@;
+  
+  # And we're done!
+  return $lc_ret;
 }
 
 
