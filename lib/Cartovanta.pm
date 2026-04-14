@@ -11,19 +11,20 @@ use warnings;
 use Exporter 'import';
 
 our @EXPORT_OK = qw(
-  infile
+  cr_alloc_get
+  cr_alloc_init
+  cr_alloc_ready
   cr_eval_with_rg
   cr_file_eval_with_rg
+  cr_home_refresh
+  cr_pk_eval
+  cr_resloc
+  cr_settings
+  infile
   shell_captr
   shell_qt
   shell_quote
-  cr_resloc
-  cr_home_refresh
-  cr_settings
-  cr_alloc_init
-  cr_alloc_get
-  cr_alloc_ready
-  cr_pk_eval
+  slurp_file
 );
 
 # DECLARE THE HELPER VARIABLES:
@@ -46,6 +47,30 @@ sub cr_home_refresh
   {
     $_homedir = (getpwuid($<))[7];
   }
+}
+
+
+
+# Loads an entire file into one Perl string and returns it.
+# Returns undef if no filename was provided or if the file
+# could not be opened for reading.
+sub slurp_file {
+  my $lc_file;  # Pathname of the file to load
+  my $lc_ret;   # File contents to be returned
+  
+  if ( (scalar @_) < 1.5 ) { return undef; }
+  
+  $lc_file = $_[0];
+  if ( !(-f $lc_file) ) { return undef; }
+  if ( !(-r $lc_file) ) { return undef; }
+  
+  $lc_ret = '';
+  open(my $lc_fh,'<',$lc_file) or return undef;
+  local $/;
+  $lc_ret = <$lc_fh>;
+  close($lc_fh);
+  
+  return($lc_ret);
 }
 
 
