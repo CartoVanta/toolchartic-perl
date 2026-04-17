@@ -43,7 +43,7 @@ my $_by_pack = {};
 #   'evret' -- The result of the `eval` done on the
 #         Perl code in the file being loaded. This
 #         will be `undef` in the event of failure.
-#   'filenom' -- The filename of the resource being
+#   'filnom' -- The filename of the resource being
 #         loaded. If the process got as far as
 #         confirming that it is a readable file and
 #         resolving the filename, this will be the
@@ -66,7 +66,7 @@ sub cr_loadplf_raw {
   $lc_ntv_ret = {
     'package' => undef,
     'evret' => undef,
-    'filenom' => $_[0],
+    'filnom' => $_[0],
   };
   
   # Do we have a valid usable file?
@@ -84,7 +84,7 @@ sub cr_loadplf_raw {
   
   # Buf if so, we should know its canonical filename.
   $lc_fnom = abs_path($_[0]);
-  $lc_ntv_ret->{'filenom'} = $lc_fnom;
+  $lc_ntv_ret->{'filnom'} = $lc_fnom;
   
   # Of course, let no file be loaded redundantly.
   if ( defined($_by_fnom->{$lc_fnom}) )
