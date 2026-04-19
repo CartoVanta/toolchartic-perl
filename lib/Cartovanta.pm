@@ -152,6 +152,7 @@ sub cr_alloc_ready {
 sub cr_pk_eval {
   my $lc_ret; # The in-progress return value
   my $lc_code; # The code that will get `eval`ed
+  my $lc_infrec; # Informational record for newly added resource
   
   # Construct initial value
   $lc_ret = {
@@ -162,11 +163,29 @@ sub cr_pk_eval {
   
   # And that's what we return if the allocator hasn't
   # been initiated.
-  if ( !cr_alloc_read() ) { return $lc_ret; }
+  if ( !cr_alloc_ready() ) { return $lc_ret; }
   
   # Now we allocate a namespace and prep code
   $lc_ret->{'package'} = cr_alloc_get();
   $lc_code = 'package ' . $lc_ret->{'package'} . '; ' . $_[0];
+  
+  # Here we set up the informational record
+  $lc_infrec = {};
+  if ( (defined($_[1])) && (ref($_[1]) eq 'HASH') )
+  {
+    $lc_infrec = { %{$_[1]} };
+  }
+  $lc_infrec->{'package'} = $lc_ret->{'package'};
+  
+  # Now we need to insert this record where the
+  # package can see it.
+  {
+    my $lc2_vnom;
+    $lc2_vnom = $lc_ret->{'package'};
+    $lc2_vnom .= '::pkginf';
+    no strict 'refs';
+    ${$lc2_vnom} = $lc_infrec;
+  }
   
   # And finally, the evaluation.
   $lc_ret->{'evret'} = eval($lc_code);

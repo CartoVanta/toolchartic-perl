@@ -61,6 +61,7 @@ sub cr_loadplf_raw {
   my $lc_file_cont; # Perl contents of new resource
   my $lc_evl_ret;   # Returned from `cr_pk_eval()`
   my $lc_code_ret;  # Returned evaled code.
+  my $lc_infrec; # Informational record for newly loaded resource.
   
   # Set up initial error code
   $lc_ntv_ret = {
@@ -92,6 +93,14 @@ sub cr_loadplf_raw {
     return($_by_fnom->{$lc_fnom});
   }
   
+  # Now we begin the setup of the informational record.
+  $lc_infrec = {};
+  if ( (defined($_[1])) && ( ref($_[1]) eq 'HASH' ) )
+  {
+    $lc_infrec = { %{$_[1]} };
+  }
+  $lc_infrec->{'filnom'} = $lc_fnom;
+  
   # Now we need the file's raw contents.
   $lc_file_cont = slurp_file($lc_fnom);
   if(!defined($lc_file_cont))
@@ -101,7 +110,7 @@ sub cr_loadplf_raw {
   }
   
   # And let's evaluate!
-  $lc_evl_ret = cr_pk_eval($lc_file_cont);
+  $lc_evl_ret = cr_pk_eval($lc_file_cont,$lc_infrec);
   $lc_ntv_ret->{'package'} = $lc_evl_ret->{'package'};
   $lc_code_ret = $lc_evl_ret->{'evret'};
   
