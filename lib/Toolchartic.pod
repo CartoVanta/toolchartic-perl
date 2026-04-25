@@ -1,6 +1,6 @@
 =head1 NAME
 
-Toolchartic - Perl resource-access infrastructure for CartoVanta tools
+Toolchartic - Perl resource-access infrastructure for Toolchartic tools
 
 =head1 SYNOPSIS
 
@@ -21,7 +21,7 @@ Toolchartic - Perl resource-access infrastructure for CartoVanta tools
 Toolchartic provides Perl utility functions for loading files,
 evaluating Perl code stored in strings or files when that code returns
 code references, constructing or executing Unix-shell command strings,
-and locating CartoVanta resources.
+and locating toolchain-specific resources.
 
 =head1 BACKWARD COMPATIBILITY
 
@@ -120,7 +120,7 @@ single-quoted shell string.
 
   my $pathname = cr_resloc($type, $relative_path, @restrictions);
 
-Searches for a CartoVanta resource and returns its pathname if found.
+Searches for a toolchain-specific resource and returns its pathname if found.
 
 The first argument is the resource type.  At present, C<f> means a file
 and C<d> means a directory.

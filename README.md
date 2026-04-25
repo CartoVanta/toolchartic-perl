@@ -1,5 +1,5 @@
-# cartovanta-perl
-Perl resource-access infrastructure for CartoVanta tools.
+# toolchartic-perl
+Perl infrastructure for -toolchartic- toolchains.
 
 ## Backward Compatibility Policy
 

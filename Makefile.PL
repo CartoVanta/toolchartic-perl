@@ -11,7 +11,7 @@ WriteMakefile(
   NAME         => 'Toolchartic',
   DISTNAME     => 'Toolchartic-Perl',
   VERSION_FROM => 'lib/Toolchartic.pm',
-  ABSTRACT     => 'Perl resource-access infrastructure for CartoVanta tools.',
+  ABSTRACT     => 'Perl resource-access infrastructure for Toolchartic toolchains.',
   AUTHOR       => 'Sophia Elizabeth Shapira',
   LICENSE      => 'perl',
   PM           => {

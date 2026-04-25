@@ -1,6 +1,6 @@
 =head1 NAME
 
-Toolchartic::Unix - reserved Unix-specific backend namespace for CartoVanta
+Toolchartic::Unix - reserved Unix-specific backend for Toolchartic
 
 =head1 SYNOPSIS
 
