@@ -40,6 +40,7 @@ our @EXPORT_OK = qw(
   cr_settings
   shell_captr
   slurp_file
+  slurp_t_file
 );
 
 # DECLARE THE HELPER VARIABLES:
@@ -76,6 +77,27 @@ sub slurp_file {
   close($lc_fh);
   
   return($lc_ret);
+}
+
+# Slurps in a text file and assures that the text gets
+# normalized to Unix-style.
+sub slurp_t_file {
+  my $lc_text;
+  
+  $lc_text = slurp_file($_[0]);
+  if ( !(defined($lc_text)) ) { return undef; }
+  
+  # NOW WE NORMALIZE THE TEXT:
+  # First, we remove UTF-8 BOM if present.
+  $lc_text =~ s/\A\x{FEFF}//;
+  # Next, we change Windows line-endings to Unix-style
+  $lc_text =~ s/\r\n/\n/g;
+  # Finally, we change old-style Mac line-endings
+  # to Unix-style
+  $lc_text =~ s/\r/\n/g;
+  
+  # And we are done!
+  return $lc_text;
 }
 
 
