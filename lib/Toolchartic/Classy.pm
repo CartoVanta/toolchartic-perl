@@ -104,7 +104,7 @@ sub cr_loadplf_raw {
   
   # Now we need the file's raw contents.
   require Toolchartic::Utl::File;
-  $lc_file_cont = Toolchartic::Utl::File->slurp_file($lc_fnom);
+  $lc_file_cont = Toolchartic::Utl::File->slurp($lc_fnom);
   if(!defined($lc_file_cont))
   {
     $lc_ntv_ret->{'err'} = ("Failed to read contents of file:\n  " . $lc_fnom . " :\n");

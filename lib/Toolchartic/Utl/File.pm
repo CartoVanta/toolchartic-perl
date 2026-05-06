@@ -8,7 +8,7 @@ use warnings;
 # Loads an entire file into one Perl string and returns it.
 # Returns undef if no filename was provided or if the file
 # could not be opened for reading.
-sub slurp_file {
+sub slurp {
   my $this;
   my $lc_file;  # Pathname of the file to load
   my $lc_ret;   # File contents to be returned
@@ -32,7 +32,7 @@ sub slurp_file {
 
 # Slurps in a text file and assures that the text gets
 # normalized to Unix-style.
-sub slurp_t_file {
+sub slurp_t {
   my $this;
   my $lc_text;
   

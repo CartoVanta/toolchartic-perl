@@ -62,14 +62,14 @@ sub cr_home_refresh {
 # could not be opened for reading.
 sub slurp_file {
   require Toolchartic::Utl::File;
-  return Toolchartic::Utl::File->slurp_file(@_);
+  return Toolchartic::Utl::File->slurp(@_);
 }
 
 # Slurps in a text file and assures that the text gets
 # normalized to Unix-style.
 sub slurp_t_file {
   require Toolchartic::Utl::File;
-  return Toolchartic::Utl::File->slurp_t_file(@_);
+  return Toolchartic::Utl::File->slurp_t(@_);
 }
 
 
