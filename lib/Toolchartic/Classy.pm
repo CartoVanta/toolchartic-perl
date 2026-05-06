@@ -11,7 +11,7 @@ use Exporter 'import';
 use File::Basename;
 use Cwd 'abs_path';
 
-use Toolchartic qw(cr_pk_eval slurp_file);
+use Toolchartic qw(cr_pk_eval);
 
 our @EXPORT_OK = qw(
   cr_loadplf_raw
@@ -103,7 +103,8 @@ sub cr_loadplf_raw {
   $lc_infrec->{'filnom'} = $lc_fnom;
   
   # Now we need the file's raw contents.
-  $lc_file_cont = slurp_file($lc_fnom);
+  require Toolchartic::Utl::File;
+  $lc_file_cont = Toolchartic::Utl::File::slurp_file($lc_fnom);
   if(!defined($lc_file_cont))
   {
     $lc_ntv_ret->{'err'} = ("Failed to read contents of file:\n  " . $lc_fnom . " :\n");
