@@ -12,6 +12,7 @@ use File::Basename;
 use Cwd 'abs_path';
 
 use Toolchartic qw(cr_pk_eval);
+use Toolchartic::Utl qw(require_str);
 
 our @EXPORT_OK = qw(
   cr_loadplf_raw
@@ -140,19 +141,7 @@ sub cr_loadplf_raw {
 }
 
 sub cv_rslc_r {
-  my $lc_ret; # Prospective return value
-  
-  # First we create the object's starting data
-  $lc_ret = {
-    'path' => [],
-  };
-  
-  # Then we bless the object.
-  require Toolchartic::Rslc;
-  bless $lc_ret, 'Toolchartic::Rslc';
-  
-  # And we're done!
-  return $lc_ret;
+  return require_str('Toolchartic::Rslc')->new(@_);
 }
 
 1;

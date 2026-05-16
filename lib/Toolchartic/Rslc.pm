@@ -2,6 +2,7 @@ package Toolchartic::Rslc;
 use strict;
 use warnings;
 use Toolchartic::Os_Spc;
+use Toolchartic::Utl qw(require_str frcbless);
 
 my $_backpack = Toolchartic::Os_Spc->pick();
 
@@ -85,6 +86,73 @@ sub _env_path_01 {
   
   # And we are done!
   return(@lc_ret);
+}
+
+sub fpth {
+  my $this;
+  my $lc_ifc;
+  my $lc_lns;
+  my $lc_eachl;
+  
+  $this = shift(@_);
+  
+  # Get lines - in reverse order
+  $lc_ifc = require_str('Toolchartic::Utl::File');
+  $lc_lns = $lc_ifc->rliner(@_);
+  
+  # Process each directive line.
+  foreach $lc_eachl ( @{$lc_lns} )
+  {
+    $this->lnpth($lc_eachl);
+  }
+  
+  return 1;
+}
+
+# This function processes a single directive line
+# of a path file.
+sub lnpth {
+  my $this;
+  my @lc_seg;
+  my $lc_cmt;
+  
+  $this = shift(@_);
+  
+  # Blast the file into segments and isolate the
+  # command name:
+  @lc_seg = split(/:/,$_[0],-1);
+  shift(@lc_seg);
+  pop(@lc_seg);
+  $lc_cmt = shift(@lc_seg);
+  
+  if ( $lc_cmt eq 'env' )
+  {
+    return $this->env_path(@lc_seg);
+  }
+  
+  if ( $lc_cmt eq 'rsid' )
+  {
+    return $this->p_rsid(@lc_seg);
+  }
+  
+}
+
+
+# THE CONSTRUCTOR METHOD
+
+sub new {
+  my $this;
+  my $lc_ret;
+  
+  $this = shift(@_);
+  
+  # First we create the object's starting data:
+  $lc_ret = {
+    'path' => [],
+  };
+  
+  # Bless & Send
+  return frcbless($lc_ret,$this);
 }
 
 

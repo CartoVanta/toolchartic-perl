@@ -38,7 +38,7 @@ sub slurp_t {
   
   $this = shift(@_);
   
-  $lc_text = slurp_file($_[0]);
+  $lc_text = $this->slurp($_[0]);
   if ( !(defined($lc_text)) ) { return undef; }
   
   # NOW WE NORMALIZE THE TEXT:
@@ -52,6 +52,40 @@ sub slurp_t {
   
   # And we are done!
   return $lc_text;
+}
+
+# This method slurps in all the files named in its
+# arguments, chops then up into individual lines --
+# and then returns all those lines, in alphabetical
+# order.
+sub rliner {
+  my $this;
+  my @lc_col;
+  my $lc_filn;
+  my @lc_rev;
+  
+  $this = shift(@_);
+  
+  # At start, collected lines are empty.
+  @lc_col = ();
+  
+  # For all the files
+  foreach $lc_filn (@_)
+  {
+    my $lc2_con;
+    my @lc2_lin;
+    
+    $lc2_con = $this->slurp_t($lc_filn);
+    if ( defined($lc2_con) )
+    {
+      @lc2_lin = split(/\n/,$lc2_con);
+      push(@lc_col, @lc2_lin);
+    }
+  }
+  
+  # It gets returned in reverse
+  @lc_rev = reverse(@lc_col);
+  return [@lc_rev];
 }
 
 1;
