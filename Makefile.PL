@@ -9,10 +9,7 @@ sub _adros
   $lc_a = pop(@_);
   foreach $lc_rg (@_)
   {
-    if ( $lc_rg ne '' )
-    {
-      $lc_a->{('lib/'.$lc_rg)} = ('$(INST_LIBDIR)/'.$lc_rg);
-    }
+    $lc_a->{('lib/'.$lc_rg)} = ('$(INST_LIBDIR)/'.$lc_rg);
   }
 }
 my $_mapy = {};
